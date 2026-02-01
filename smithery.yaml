@@ -4,3 +4,10 @@ startCommand:
   args:
     - "-m"
     - "mcp_server.server"
+  configSchema:
+    type: object
+    properties:
+      SEMANTIC_SCHOLAR_API_KEY:
+        type: string
+        description: "Your Semantic Scholar API Key (get one at semanticscholar.org)"
+    required: []
