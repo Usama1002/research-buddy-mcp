@@ -20,7 +20,7 @@ A powerful literature review assistant for AI agents, powered by the Semantic Sc
 Ensure you have Python 3.10+ installed.
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/Usama1002/research-buddy-mcp.git
 cd research-buddy-mcp
 pip install -r requirements.txt
 ```
