@@ -1,0 +1,5 @@
+fastmcp
+requests
+pypdf
+python-dotenv
+httpx
