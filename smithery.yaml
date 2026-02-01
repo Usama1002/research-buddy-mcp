@@ -1,9 +1,5 @@
 startCommand:
-  type: stdio
-  command: python3
-  args:
-    - "-m"
-    - "mcp_server.server"
+  type: http
   configSchema:
     type: object
     properties:

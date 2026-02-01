@@ -3,3 +3,4 @@ requests
 pypdf
 python-dotenv
 httpx
+uvicorn

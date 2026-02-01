@@ -11,4 +11,5 @@ COPY . .
 ENV PYTHONUNBUFFERED=1
 
 # Expose the MCP server
-CMD ["python3", "-m", "mcp_server.server"]
+EXPOSE 8000
+CMD ["fastmcp", "run", "mcp_server.server:mcp", "--transport", "sse", "--host", "0.0.0.0", "--port", "8000"]
