@@ -15,25 +15,31 @@ A powerful literature review assistant for AI agents, powered by the Semantic Sc
 
 ## Installation
 
-### 1. Environment Setup
+### Option A: Install from GitHub (recommended)
 
-Ensure you have Python 3.10+ installed.
+```bash
+pip install git+https://github.com/Usama1002/research-buddy-mcp.git
+```
+
+### Option B: Install from source (for development)
 
 ```bash
 git clone https://github.com/Usama1002/research-buddy-mcp.git
 cd research-buddy-mcp
-pip install -r requirements.txt
+pip install -e .
 ```
 
-### 2. Configuration
+### Configuration
 
-Create a `.env` file in the root directory (or use the one provided):
+Create a `.env` file or set the environment variable:
 
 ```env
 SEMANTIC_SCHOLAR_API_KEY=your_api_key_here
 ```
 
-### 3. Usage with Claude Desktop
+## Usage
+
+### Claude Desktop
 
 Add this to your `claude_desktop_config.json`:
 
@@ -41,10 +47,61 @@ Add this to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "research-buddy": {
-      "command": "python3",
-      "args": ["-m", "mcp_server.server"],
+      "command": "research-buddy-mcp",
       "env": {
-        "SEMANTIC_SCHOLAR_API_KEY": "ecfDV5IDYg2d52CPQz1IU39TiPRdxGW71v4FVJzd"
+        "SEMANTIC_SCHOLAR_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+### Antigravity (Gemini)
+
+Add the following to `~/.gemini/antigravity/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "research-buddy": {
+      "command": "research-buddy-mcp",
+      "args": [],
+      "env": {
+        "SEMANTIC_SCHOLAR_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+### VS Code
+
+Create a `.vscode/mcp.json` in your project root:
+
+```json
+{
+  "servers": {
+    "research-buddy": {
+      "command": "research-buddy-mcp",
+      "env": {
+        "SEMANTIC_SCHOLAR_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+Alternatively, add it globally in your VS Code `settings.json`:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "research-buddy": {
+        "command": "research-buddy-mcp",
+        "env": {
+          "SEMANTIC_SCHOLAR_API_KEY": "your_api_key_here"
+        }
       }
     }
   }
