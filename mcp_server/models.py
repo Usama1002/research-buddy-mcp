@@ -1,22 +1,26 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
+
 class Author(BaseModel):
     authorId: Optional[str] = None
-    name: str
+    name: Optional[str] = "Unknown"
+
 
 class Tldr(BaseModel):
     model: Optional[str] = None
-    text: str
+    text: Optional[str] = ""
+
 
 class OpenAccessPdf(BaseModel):
-    url: str
+    url: Optional[str] = None
     status: Optional[str] = None
 
+
 class Paper(BaseModel):
-    paperId: str
+    paperId: Optional[str] = None
     url: Optional[str] = None
-    title: str
+    title: Optional[str] = "Untitled"
     abstract: Optional[str] = None
     venue: Optional[str] = None
     year: Optional[int] = None
@@ -28,13 +32,17 @@ class Paper(BaseModel):
     openAccessPdf: Optional[OpenAccessPdf] = None
     citationStyles: Optional[dict] = None
 
-class PaperSearchResult(BaseModel):
-    total: int
-    offset: int
-    next: Optional[int] = None
-    data: List[Paper]
 
-class AuthorDetails(Author):
+class PaperSearchResult(BaseModel):
+    total: Optional[int] = 0
+    offset: Optional[int] = 0
+    next: Optional[int] = None
+    data: List[Paper] = []  # Default to empty list when API returns no results
+
+
+class AuthorDetails(BaseModel):
+    authorId: Optional[str] = None
+    name: Optional[str] = "Unknown"
     affiliations: List[str] = []
     paperCount: int = 0
     citationCount: int = 0

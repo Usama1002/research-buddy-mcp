@@ -25,7 +25,9 @@ class SemanticScholarClient:
                     time.sleep(2 ** attempt)
                     continue
                 response.raise_for_status()
-                return response.json()
+                data = response.json()
+                # Guard against non-dict responses (e.g. empty arrays)
+                return data if data is not None else {}
             except requests.exceptions.RequestException as e:
                 if attempt == 2:
                     raise Exception(f"API request failed: {str(e)}")
@@ -37,6 +39,8 @@ class SemanticScholarClient:
         params = {"query": query, "limit": limit, "fields": fields}
         if year: params["year"] = year
         data = self._make_request("GET", url, params=params)
+        if not isinstance(data, dict):
+            return PaperSearchResult()
         return PaperSearchResult(**data)
 
     def get_paper_details(self, paper_id: str, fields: str = "paperId,title,abstract,tldr,authors,year,venue,citationCount,referenceCount,openAccessPdf,url,influentialCitationCount,citationStyles") -> Paper:
@@ -57,14 +61,14 @@ class SemanticScholarClient:
         formatted_fields = ",".join([f"citingPaper.{f.strip()}" for f in fields.split(",")])
         params = {"fields": formatted_fields, "limit": limit, "offset": offset}
         data = self._make_request("GET", url, params=params)
-        return [Paper(**p["citingPaper"]) for p in data.get("data", [])]
+        return [Paper(**p["citingPaper"]) for p in data.get("data", []) if p.get("citingPaper")]
 
     def get_references(self, paper_id: str, limit: int = 20, offset: int = 0, fields: str = "paperId,title,year,authors") -> List[Paper]:
         url = f"{self.BASE_URL}/paper/{paper_id}/references"
         formatted_fields = ",".join([f"citedPaper.{f.strip()}" for f in fields.split(",")])
         params = {"fields": formatted_fields, "limit": limit, "offset": offset}
         data = self._make_request("GET", url, params=params)
-        return [Paper(**p["citedPaper"]) for p in data.get("data", [])]
+        return [Paper(**p["citedPaper"]) for p in data.get("data", []) if p.get("citedPaper")]
 
     def get_author_details(self, author_id: str, fields: str = "name,affiliations,paperCount,citationCount,hIndex,papers.title,papers.year,papers.paperId") -> AuthorDetails:
         url = f"{self.BASE_URL}/author/{author_id}"
@@ -77,4 +81,6 @@ class SemanticScholarClient:
         params = {"fields": fields}
         payload = {"ids": paper_ids}
         data = self._make_request("POST", url, params=params, json_data=payload)
-        return [Paper(**p) for p in data]
+        if not isinstance(data, list):
+            return []
+        return [Paper(**p) for p in data if isinstance(p, dict)]
