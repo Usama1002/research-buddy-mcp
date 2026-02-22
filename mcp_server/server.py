@@ -88,5 +88,9 @@ def read_pdf_text(url: str, max_chars: int = 10000) -> str:
     """
     return extract_text_from_pdf_url(url, max_chars=max_chars)
 
-if __name__ == "__main__":
+def main():
+    """Entry point for the research-buddy-mcp CLI."""
     mcp.run()
+
+if __name__ == "__main__":
+    main()
