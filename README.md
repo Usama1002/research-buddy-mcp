@@ -76,6 +76,8 @@ Add the following to `~/.gemini/antigravity/mcp_config.json`:
 
 ### VS Code
 
+#### Native (Windows, macOS, Linux)
+
 Create a `.vscode/mcp.json` in your project root:
 
 ```json
@@ -108,6 +110,40 @@ Alternatively, add it globally in your VS Code `settings.json`:
 }
 ```
 
+#### WSL (Windows Subsystem for Linux)
+
+VS Code's extension host runs in the Windows process space and cannot directly resolve WSL binaries. You must explicitly delegate the command to WSL using the full path to the installed binary.
+
+First, find the binary path inside WSL:
+
+```bash
+which research-buddy-mcp
+# Example output: /home/<your-username>/.local/bin/research-buddy-mcp
+```
+
+Then add the following to your VS Code `settings.json` (or `.vscode/mcp.json`):
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "research-buddy": {
+        "command": "wsl",
+        "args": [
+          "--",
+          "/home/<your-username>/.local/bin/research-buddy-mcp"
+        ],
+        "env": {
+          "SEMANTIC_SCHOLAR_API_KEY": "your_api_key_here"
+        }
+      }
+    }
+  }
+}
+```
+
+Replace `/home/<your-username>` with your actual WSL username.
+
 ## Tools Provided
 
 | Tool | Description |
@@ -120,6 +156,14 @@ Alternatively, add it globally in your VS Code `settings.json`:
 | `get_author_details` | Get author h-index and publication list. |
 | `get_paper_bibtex` | Get ready-to-use BibTeX for a paper. |
 | `read_pdf_text` | Extract text from an Open Access PDF URL. |
+
+## Troubleshooting
+
+### `spawn research-buddy-mcp ENOENT` in VS Code
+
+This error means VS Code cannot find the `research-buddy-mcp` executable. This is common when using **WSL on Windows**, because VS Code's extension host runs in Windows and does not have access to WSL's PATH.
+
+**Fix:** Use the WSL-specific configuration above, pointing to the full binary path returned by `which research-buddy-mcp` inside your WSL terminal.
 
 ## License
 MIT
